@@ -1,0 +1,386 @@
+--- a/.claude/commands/job-apply-agent.md
++++ b/.claude/commands/job-apply-agent.md
+@@ -14,12 +14,12 @@
+ |-------|--------|
+ | (no args) / `help` | Show the agent info card + skills |
+ | `run [resume] [role] [location]` | Run the FULL 8-step loop end to end (see "Full loop" below) |
+-| `market [role] [location]` | Search jobs + build Job Data Center — read `~/.claude/skills/job-apply-agent/market.md` |
+-| `skillmap` | You vs market: skill gaps, domain gaps, fit — read `~/.claude/skills/job-apply-agent/skillmap.md` |
+-| `externship [domain]` | Recommend an Extern externship to close a domain gap — read `~/.claude/skills/job-apply-agent/externship.md` |
+-| `write [job]` / `apply [job]` | Write tailored application + auto-fill the form, stop before submit — read `~/.claude/skills/job-apply-agent/apply.md` |
+-| `track` | Log applications + open the dashboard — read `~/.claude/skills/job-apply-agent/track.md` |
+-| `review` | Weekly self-learning — read `~/.claude/skills/job-apply-agent/review.md` |
++| `market [role] [location]` | Search jobs + build Job Data Center — read `.claude/skills/job-apply-agent/market.md` |
++| `skillmap` | You vs market: skill gaps, domain gaps, fit — read `.claude/skills/job-apply-agent/skillmap.md` |
++| `externship [domain]` | Recommend an Extern externship to close a domain gap — read `.claude/skills/job-apply-agent/externship.md` |
++| `write [job]` / `apply [job]` | Write tailored application + auto-fill the form, stop before submit — read `.claude/skills/job-apply-agent/apply.md` |
++| `track` | Log applications + open the dashboard — read `.claude/skills/job-apply-agent/track.md` |
++| `review` | Weekly self-learning — read `.claude/skills/job-apply-agent/review.md` |
+ | *(unrecognized)* | Show info card + list valid skills |
+ 
+ ---
+@@ -55,7 +55,7 @@
+ 2. **market** — search jobs + build the Job Data Center.
+ 3. **skillmap** — compare the student vs the market; call out skill gaps vs domain gaps + fit.
+ 4. **externship** — if a domain gap ties to a target role, recommend one Extern externship.
+-5. **write** — rank top 5, write the tailored application for the pick, then auto-fill the form and STOP before submit.
++5. **write** — rank top 5 (using the ranking rules in `market.md`), write the tailored application for the pick, then auto-fill the form and STOP before submit.
+ 6. **track** — log the application and open the dashboard.
+ 7. (optional) **review** — weekly self-learning.
+ 
+--- a/.claude/skills/job-apply-agent/SKILL.md
++++ b/.claude/skills/job-apply-agent/SKILL.md
+@@ -14,12 +14,12 @@
+ |-------|--------|
+ | (no args) / `help` | Show the agent info card + skills |
+ | `run [resume] [role] [location]` | Run the FULL 8-step loop end to end (see "Full loop" below) |
+-| `market [role] [location]` | Search jobs + build Job Data Center — read `~/.claude/skills/job-apply-agent/market.md` |
+-| `skillmap` | You vs market: skill gaps, domain gaps, fit — read `~/.claude/skills/job-apply-agent/skillmap.md` |
+-| `externship [domain]` | Recommend an Extern externship to close a domain gap — read `~/.claude/skills/job-apply-agent/externship.md` |
+-| `write [job]` / `apply [job]` | Write tailored application + auto-fill the form, stop before submit — read `~/.claude/skills/job-apply-agent/apply.md` |
+-| `track` | Log applications + open the dashboard — read `~/.claude/skills/job-apply-agent/track.md` |
+-| `review` | Weekly self-learning — read `~/.claude/skills/job-apply-agent/review.md` |
++| `market [role] [location]` | Search jobs + build Job Data Center — read `.claude/skills/job-apply-agent/market.md` |
++| `skillmap` | You vs market: skill gaps, domain gaps, fit — read `.claude/skills/job-apply-agent/skillmap.md` |
++| `externship [domain]` | Recommend an Extern externship to close a domain gap — read `.claude/skills/job-apply-agent/externship.md` |
++| `write [job]` / `apply [job]` | Write tailored application + auto-fill the form, stop before submit — read `.claude/skills/job-apply-agent/apply.md` |
++| `track` | Log applications + open the dashboard — read `.claude/skills/job-apply-agent/track.md` |
++| `review` | Weekly self-learning — read `.claude/skills/job-apply-agent/review.md` |
+ | *(unrecognized)* | Show info card + list valid skills |
+ 
+ ---
+@@ -55,7 +55,7 @@
+ 2. **market** — search jobs + build the Job Data Center.
+ 3. **skillmap** — compare the student vs the market; call out skill gaps vs domain gaps + fit.
+ 4. **externship** — if a domain gap ties to a target role, recommend one Extern externship.
+-5. **write** — rank top 5, write the tailored application for the pick, then auto-fill the form and STOP before submit.
++5. **write** — rank top 5 (using the ranking rules in `market.md`), write the tailored application for the pick, then auto-fill the form and STOP before submit.
+ 6. **track** — log the application and open the dashboard.
+ 7. (optional) **review** — weekly self-learning.
+ 
+--- a/.claude/skills/job-apply-agent/apply.md
++++ b/.claude/skills/job-apply-agent/apply.md
+@@ -2,16 +2,48 @@
+ 
+ Run tools from the repository root (your current directory).
+ 
+-1. **Rank** the jobs 0–100 using the skill map. Show the top 5 as a table: `Rank | Title | Company | Fit | Why`.
+-2. **Write the application** for the chosen job:
++1. **Rank** the jobs 0–100 using the skill map, then order them by the **Ranking rules for all job searches** in `market.md`: deadline within 10 days first, then posted in the last 14 days, then fit. Apply its 60-day cutoff, 3-application cap, title screen and 55+ display rule. Show the top 5 as a table: `Rank | Title | Company | Fit | Deadline | Days since posted | Why`.
++2. **Write the application** for each chosen job:
+    - Tailored cover letter (150–200 words, 3 paragraphs).
+-   - Resume bullet rewrites that match the JD's language.
++   - A full tailored resume (see "Application package" below), not just a list of bullet rewrites.
+    - Reference REAL experience from the resume. Never fabricate. No "I am writing to express my interest."
+-3. **Auto-fill demo** (mock form, reliable and reproducible):
++3. **Save the application package** (below) for each job.
++4. **Auto-fill demo** (mock form, reliable and reproducible):
+    - Serve it: `python -m http.server` inside `demo/`, then open the localhost URL for `demo/application_form.html`.
+-   - Generate a résumé PDF for file-upload fields: `python tools/make_resume_pdf.py student_resume.txt my_job_data_center/<name>.pdf`.
++   - Generate a résumé PDF for file-upload fields: `python tools/make_resume_pdf.py student_resume.txt my_job_data_center/<name>.pdf`. When a tailored resume PDF exists from step 3, upload that one instead.
+    - Fill fields with Playwright via CSS id selectors (`#firstName`, `#email`, `#gradYear` combobox, `#authorized` checkbox, etc.). Upload the PDF via the file input.
+ 
++## Application package
++
++One folder per job: `applications/<company-slug>/` (e.g. `applications/stripe/`). `applications/` is gitignored because it holds the student's contact details. Never write to or overwrite the student's original resume file.
++
++Files in each folder (`<First>_<Last>` from the resume, `<Company>` short and CamelCase, e.g. `GreyState`):
++
++| File | Contents |
++|---|---|
++| `<First>_<Last>_Cover_Letter_<Company>.docx` + `.pdf` | Cover letter only: name/contact header, date, "Hiring Team / <Company>", "Dear Hiring Team,", the 3 paragraphs, "Sincerely, <Name>". No fit score, posting link, or bullets. |
++| `<First>_<Last>_Resume_<Company>.docx` + `.pdf` | The complete resume, tailored to this job. Exactly ONE page. |
++| `notes.md` | Posting link, fit score, tracker status, and the to-dos before applying (work authorization, official posting URL if the link is an aggregator, any skill gap worth closing first). |
++
++### Tailored resume rules
++- **Start from the original resume and keep everything:** every section in the same order, every entry, every date, education, GPA, interests. Same layout: match the original's page size, margins, font, font sizes, heading rules, and right-aligned locations/dates. Inspect the original PDF's fonts/sizes/margins first (e.g. PyMuPDF `get_text("dict")`) instead of guessing.
++- **Tailoring means only:** reorder bullets within each entry so the most relevant come first; reword a bullet using the JD's vocabulary; reorder the skills line so the posting's tools come first. Section and entry order stay as in the original. The student may approve a specific exception (e.g. a different project leads PROJECTS for one role family); record it here with the date it was approved.
++- **Facts added after the original resume:** if the student confirms a real skill or fact that isn't on the resume yet, record it in `applications/_tools/added_facts.py` (gitignored). Only those confirmed facts may be added; the word check treats them as part of the original.
++- **Every claim must already be in the original resume.** A rewrite can change verbs and word order. It can't add a number, tool, outcome, scope, or adjective the original doesn't support (e.g. no "to protect data integrity", no "to speed up development"). A skill may move into the skills line only if a bullet in the original already shows it. Keep qualifiers (e.g. "Experience in Power BI" stays a qualified claim).
++- Keep the original bullets verbatim unless a rewrite clearly improves the match.
++
++### Building and verifying the files
++- **If `applications/_tools/build.sh` exists, use it; don't rewrite the scripts.** For a new job, add an entry to `jobs` in `applications/_tools/build_content.py` (reusing its original-bullet text `O[...]`), write the letter to `applications/_tools/letters/<key>.txt`, then run `applications/_tools/build.sh`. It builds every .docx and PDF and runs checks 1, 2 and 4 below. You still do checks 3 and 5 yourself (images are in `applications/_tools/previews/`).
++- Build the `.docx` files with docx-js (see the docx skill). Convert to PDF with LibreOffice: `soffice --headless --convert-to pdf`.
++  - LibreOffice missing: `brew install --cask libreoffice`. If Homebrew fails, use the official DMG from download.documentfoundation.org: verify its published SHA-256, then copy `LibreOffice.app` to `~/Applications`.
++  - Headless LibreOffice on macOS may not see `/System/Library/Fonts/Supplemental` (e.g. Times New Roman) and silently substitutes Liberation Serif. Fix: a dedicated profile (`-env:UserInstallation=file://<dir>`) whose `user/fonts/` symlinks the needed font files.
++- **Verify before reporting done:**
++  1. Every resume PDF is exactly 1 page, and every cover letter PDF is 1 page.
++  2. The embedded fonts match the original resume's fonts.
++  3. Render every page to an image and look at it. Check for clean alignment, no orphan line of 1–3 words, and spacing that matches the original.
++  4. List every word in each tailored resume that doesn't appear in the original resume, and review each one. Inflections and rephrasings of existing claims are fine; anything that adds a fact gets reverted.
++  5. Check time words against today's date and the resume's dates (e.g. "last summer" for a job two summers ago is wrong; say "In summer 2025").
++
+ **HARD RULES when filling any form (real or demo):**
+ - **NEVER click submit.** Fill every field, then stop at the submit button — the human decides.
+ - **NEVER fill honeypot** anti-bot fields (e.g. a hidden box labeled "leave this empty"). Filling one flags the applicant as a bot.
+--- a/.claude/skills/job-apply-agent/market.md
++++ b/.claude/skills/job-apply-agent/market.md
+@@ -5,9 +5,50 @@
+ Run everything from the repository root (your current directory).
+ 
+ 1. **Search jobs:** `python tools/search_jobs.py "{role}" "{location}" 15`
+-   - Calls JSearch + Adzuna, returns JSON with real listings (full JD text).
++   - Calls JSearch + Adzuna, returns JSON with real listings (full JD text). Each JSearch listing also carries `ats_link`/`ats` (an apply link on the employer's ATS) and `employer_site_link` (an apply link on the employer's own website), used for verification (rule 11).
++   - **Check the quota before searching:** `python tools/search_jobs.py --usage` prints the JSearch plan's `limit`, `used`, `remaining` and `reset_at` for this billing period. It costs no search request. Tell the student how many requests are left, and stop searching once `used` reaches 80% of `limit` (`stop_at_80pct`).
++   - Drops postings listed in `my_job_data_center/skip_list.json` (roles the student already handled on their own) and reports how many it skipped on stderr. To skip another, add `{"company": ..., "title_contains": ..., "reason": ...}`.
+    - Needs API keys in `.env`. If they are missing or the call errors, **stop and say exactly what is missing** and point at the setup section of the README. Do not invent listings and do not continue with placeholder jobs — every later step (Job Data Center, skill map, fit scores) is only as real as this data.
+ 2. **Extract skill frequencies** (YOU do this from the JD text): hard skills + how many JDs mention each, soft skills + freq, tools/software + freq, certifications if any.
+ 3. **Save the snapshot:** `python tools/save_jdc.py "{role}" '{market_profile_json}' {n_jobs}` → writes to `my_job_data_center/`.
+ 
+ **Output:** a short "the market wants ___" summary — the top demanded hard skills, tools, and any recurring domain context (e.g. many roles are policy / finance / healthcare).
++
++## Ranking rules for all job searches
++
++These apply to every search and every ranked list of postings: JSearch, Simplify, combined searches, re-ranks, and the top-5 table in `apply.md`. Follow them without being asked.
++
++1. **Always find the posting date.** Use the company's own posting date from its careers site when available (for example Workday `startDate`, Greenhouse `first_published`, Oracle `ExternalPostedStartDate`, Lever `createdAt`, Ashby `publishedAt`, JSON-LD `datePosted`, amazon.jobs `posted_date`). Fall back to Simplify's `date_posted` or JSearch's posted date only if the company doesn't show one, and mark which source was used: (company), (Simplify) or (JSearch). JSearch dates are often aggregator reposts, so never trust them alone.
++2. **Rank in this order:**
++   1. Deadline within the next 10 days (soonest first)
++   2. Posted in the last 14 days
++   3. Then fit score
++
++   Within each tier, break ties by fit score.
++3. **Include a "Days since posted" column** in every results table, with the date source in parentheses, e.g. `12 (company)`.
++4. **Drop postings older than 60 days** unless the company's site shows a future deadline. List what was dropped and why.
++5. **Company cap: 3 applications per parent company.** Count rows in `my_job_data_center/tracker.db` with status other than `drafted`. Skip companies with 3 or more applications, unless the student says otherwise, and name them in the output.
++   - **A 4th is allowed for a clearly different team.** If a company has exactly 3 applications and the posting is clearly a different team or function from all three, don't skip it. List it in a **"Capped but strong fit"** section, with the same columns as the main tables, plus the company's existing applications (title and status from the tracker) so the student can decide. Companies with 4 or more applications are skipped.
++   - **Count by parent company.** Subsidiaries and brands that share one employer or careers system count as one company:
++     - **Marsh McLennan** = Marsh, Mercer, Oliver Wyman, NERA (also Marsh McLennan Agency, Guy Carpenter)
++     - **PACCAR** = PACCAR, PACCAR Parts, Kenworth, Peterbilt
++     - **TikTok** = TikTok, ByteDance
++     - **Allstate** = Allstate, Arity (also National General)
++     - **News Corp** = Dow Jones, The Wall Street Journal, Barron's, MarketWatch, New York Post, HarperCollins, Realtor.com. Fox Corporation is a separate company.
++     - **Comcast** = NBCUniversal, DreamWorks Animation, Peacock, Sky, Comcast. Simplify files some NBCUniversal postings under "DreamWorks Animation".
++   - Also merge spelling variants of one employer (for example "Health Care Service Corporation" = "HCSC", "EY" = "Ernst & Young").
++   - Apply the same grouping to any other subsidiaries you notice that share one careers system, and say which grouping you added.
++6. **Title screen: drop only pure software engineering, hardware and PhD-only roles.** Drop titles that are pure software engineering (software engineer/SWE, backend, frontend, full-stack, mobile, embedded, SRE/DevOps), hardware (hardware, firmware, electrical, mechanical, chip/ASIC/RF and similar), and roles open only to PhD students. **Keep everything else** (data engineering, data science, ML/AI, quant research, product analyst, research and similar) and score it normally, with a one-line stretch note when it leans technical. If a dropped title contains "data" or "analyst" (any case), list it in a **"Filtered by title"** section with company, title, city, link and the reason, instead of dropping it silently.
++7. **Show every role scoring 55+.** Group them as **Strong (75+)**, **Possible (65–74)** and **Stretch (55–64)**, each ordered by rule 2 (deadline, then recency, then fit). Give every Stretch role one line on its main gap. Count roles under 55 in the output, without listing them.
++9. **Drop graduate-level titles.** Drop any posting whose title contains "Graduate Intern", "MBA" or "Master's" (including "Master's only") unless the posting explicitly says undergraduates may apply. "Undergraduate Intern" titles are not affected. List each drop with its reason. (Added 2026-11-12 after an application to a graduate-only role was rejected.)
++8. **Hard requirements never loosen:** Summer 2027 term, open to undergraduates, in the student's US target cities (or US remote), still open on the employer's site, and no invented experience in scoring or notes. **Target cities:** New York City (including Brooklyn), Long Island (e.g. Melville, Hicksville, Stony Brook), Boston/Cambridge, Chicago, the San Francisco Bay Area and the rest of California, and Seattle. Flag other cities as relocation and include them only when the student asks. (Long Island added 2026-11-23.)
++10. **Where to aim (from outcomes, 2026-11-16 review).** Prioritize **consulting, advisory, strategy and operations roles at structured campus programs, especially in financial services** (banks, payments, credit, insurance, Big 4/advisory): 5 of the first 7 responses came from these. Keep marketing analytics at media/tech companies in the main lanes. **Deprioritize generic data science, data engineering and ML roles at tech companies** (0 for about 30): score them about 10 points lower and list them only when the domain fit is unusual (e.g. fintech/tokenization, sports/games data, healthcare tied to the student's interests), with that reason stated.
++
++11. **JSearch: budget and verification (2026-11-23).**
++   - **Budget:** up to 10 searches per `/job-hunt jsearch` run (about once a week). Search role keywords (business analyst, data analyst, risk, operations, strategy, consulting, financial analyst, analytics) across the target cities in rule 8; `/job-hunt` has the search plan and keyword rotation. Check `--usage` first and never go past 80% of the monthly quota.
++   - **Verify by apply link first:** if a result's `ats_link` is on the employer's own ATS (Workday, Greenhouse, Lever, iCIMS, Ashby, Oracle, SmartRecruiters), or `employer_site_link` is on the employer's own domain, count the posting as found on the employer's site. Open that link (the lead's one ATS query) for the date, deadline and eligibility, and confirm it's open. An ATS board belonging to a staffing agency or recruiter doesn't count. Web search only if neither link works.
++   - **Unverified JSearch leads** scoring 65+ go in a separate **"JSearch – verify by hand"** section, with fit scored from the JSearch description and the aggregator link marked as not official. Lower-scoring ones are only counted. They never appear in the main tables.
++
++12. **Company-first sweep (2026-11-23).** Every `/job-hunt` run also checks the careers sites of the companies in `my_job_data_center/target_companies.md` (second-step companies, financial-services and advisory campus programs, and the student's own picks). Companies at the 3-application cap are left out. Gmail digests are read in full, never triaged by subject. Recruiter messages go in a **Recruiter outreach** section.
++
++**Note on "fresh postings" searches:** when a search is limited to recent postings (for example "posted since Nov 3"), also include **actuarial** roles posted in the previous 30 days. Actuarial programs post earlier than other internships, so a short window misses most of them. All other rules above still apply to those roles, including the 60-day cutoff and the 3-application cap.
+--- a/CLAUDE.md
++++ b/CLAUDE.md
+@@ -73,8 +73,15 @@
+ - Keep it to one clear recommendation, phrased as advice ("to be credible for policy-data roles like this, get one real project in that world — Extern's CIYJ Data Analytics externship fits"), not a promo.
+ 
+ ### Step 5: Match & Rank
+-Score each job 0-100 based on the skill map. Show top 5 as a table:
+-Rank | Title | Company | Fit Score | Why
++Score each job 0-100 based on the skill map, then order and filter the list with the **Ranking rules for all job searches** in `.claude/skills/job-apply-agent/market.md`:
++- Use the company's own posting date.
++- Rank by deadline within 10 days, then posted in the last 14 days, then fit.
++- Drop postings older than 60 days unless they have a future deadline.
++- Cap at 3 applications per parent company (a 4th only for a clearly different team).
++- Show every role scoring 55+ (55–64 = Stretch, with its gap).
++
++Show top 5 as a table:
++Rank | Title | Company | Fit Score | Deadline | Days since posted | Why
+ 
+ ### Step 6: Write Application
+ For top jobs (user picks which), generate:
+--- a/tools/search_jobs.py
++++ b/tools/search_jobs.py
+@@ -4,17 +4,56 @@
+ Two sources: JSearch (full JDs) + Adzuna (salary/market data).
+ 
+ Usage: python tools/search_jobs.py "data analyst" "New York" 15
++       python tools/search_jobs.py --usage    (JSearch quota this month; costs no request)
+ """
+ 
+ import sys
+ import os
+ import json
++import re
+ import requests
++from urllib.parse import urlparse
+ from dotenv import load_dotenv
+ from pathlib import Path
+ 
+ load_dotenv(Path(__file__).parent.parent / ".env")
+ 
++# Employer applicant-tracking systems; an apply link on one of these is the employer's own posting
++ATS_DOMAINS = {
++    "myworkdayjobs.com": "Workday", "myworkdaysite.com": "Workday",
++    "greenhouse.io": "Greenhouse", "lever.co": "Lever", "icims.com": "iCIMS",
++    "ashbyhq.com": "Ashby", "oraclecloud.com": "Oracle", "smartrecruiters.com": "SmartRecruiters",
++}
++
++
++def _host(url):
++    host = (urlparse(url or "").hostname or "").lower()
++    return host[4:] if host.startswith("www.") else host
++
++
++def employer_links(r):
++    # First apply link on a known ATS, and first apply link on the employer's own website domain
++    links = [r.get("job_apply_link")] + [o.get("apply_link") for o in r.get("apply_options") or []]
++    links = [u for u in links if u]
++    site = _host(r.get("employer_website"))
++    ats = next(((u, name) for u in links for d, name in ATS_DOMAINS.items()
++                if _host(u) == d or _host(u).endswith("." + d)), (None, None))
++    own = next((u for u in links if site and (_host(u) == site or _host(u).endswith("." + site))), None)
++    return {"ats_link": ats[0], "ats": ats[1], "employer_site_link": own}
++
++
++def jsearch_usage():
++    # OpenWeb Ninja usage endpoint: plan quota for the current billing period (not a search request)
++    api_key = os.environ.get("JSEARCH_API_KEY") or os.environ.get("RAPIDAPI_KEY")
++    if not api_key:
++        sys.exit("ERROR: JSEARCH_API_KEY is missing from .env")
++    resp = requests.get("https://api.openwebninja.com/usage", headers={"x-api-key": api_key},
++                        params={"api_id": "jsearch"}, timeout=30)
++    resp.raise_for_status()
++    q = resp.json()["data"]["quotas"][0]
++    return {"limit": q["limit"], "used": q["used"], "remaining": q["remaining"], "reset_at": q["reset_at"],
++            "stop_at_80pct": int(q["limit"] * 0.8)}
++
+ 
+ def search_jsearch(role, location, max_results=10):
+     api_key = os.environ.get("JSEARCH_API_KEY") or os.environ.get("RAPIDAPI_KEY")
+@@ -39,6 +78,9 @@
+             "location": f"{r.get('job_city', '')}, {r.get('job_state', '')}",
+             "description": r.get("job_description", ""),
+             "url": r.get("job_apply_link") or r.get("job_google_link", ""),
++            "employer_website": r.get("employer_website"),
++            "publisher": r.get("job_publisher"),
++            **employer_links(r),
+             "salary_min": r.get("job_min_salary"),
+             "salary_max": r.get("job_max_salary"),
+             "posted": r.get("job_posted_at_datetime_utc", ""),
+@@ -60,7 +102,8 @@
+     resp = requests.get(
+         "https://api.adzuna.com/v1/api/jobs/us/search/1",
+         params={"app_id": app_id, "app_key": app_key, "what": role, "where": location,
+-                "results_per_page": max_results, "sort_by": "relevance"},
++                "results_per_page": max_results, "sort_by": "relevance",
++                "max_days_old": 30},  # same window as JSearch's date_posted=month
+         timeout=15,
+     )
+     resp.raise_for_status()
+@@ -74,6 +117,8 @@
+             "location": r.get("location", {}).get("display_name", ""),
+             "description": r.get("description", ""),
+             "url": r.get("redirect_url", ""),
++            "employer_website": None, "publisher": "Adzuna",
++            "ats_link": None, "ats": None, "employer_site_link": None,
+             "salary_min": r.get("salary_min"),
+             "salary_max": r.get("salary_max"),
+             "posted": r.get("created", ""),
+@@ -86,13 +131,62 @@
+     return jobs
+ 
+ 
++COMPANY_SUFFIXES = {"inc", "incorporated", "llc", "ltd", "limited", "corp", "corporation", "co", "plc", "lp", "llp"}
++
++
++def normalize_company(name):
++    # Lowercase, "&" -> "and", punctuation removed, legal suffixes dropped: "Acme, Inc." -> "acme"
++    words = re.sub(r"[^a-z0-9 ]", " ", (name or "").lower().replace("&", " and ")).split()
++    while words and words[-1] in COMPANY_SUFFIXES:
++        words.pop()
++    return " ".join(words)
++
++
++def apply_skip_list(jobs):
++    # Drops postings the student has already handled outside the agent (my_job_data_center/skip_list.json)
++    skip_file = Path(__file__).parent.parent / "my_job_data_center" / "skip_list.json"
++    if not skip_file.exists():
++        return jobs
++    rules = json.loads(skip_file.read_text())
++
++    # Compare whole normalized company names, never substrings: "art" must not match "Start" or
++    # "Art of Problem Solving" (same fix as the duplicate check in /job-hunt step 5)
++    def skipped(job):
++        company = normalize_company(job["company"])
++        return any(normalize_company(r["company"]) == company
++                   and r.get("title_contains", "").lower() in job["title"].lower() for r in rules)
++
++    kept = [j for j in jobs if not skipped(j)]
++    if len(kept) < len(jobs):
++        print(f"Skipped {len(jobs) - len(kept)} listing(s) matching skip_list.json", file=sys.stderr)
++    return kept
++
++
+ if __name__ == "__main__":
++    if sys.argv[1:2] == ["--usage"]:
++        print(json.dumps(jsearch_usage(), indent=2))
++        sys.exit()
+     role = sys.argv[1] if len(sys.argv) > 1 else "data analyst intern"
+     location = sys.argv[2] if len(sys.argv) > 2 else "United States"
+     max_results = int(sys.argv[3]) if len(sys.argv) > 3 else 10
+ 
+-    jobs = search_jsearch(role, location, max_results)
++    jsearch_skipped = False
++    try:
++        jobs = search_jsearch(role, location, max_results)
++    except requests.HTTPError as e:
++        # JSearch's free tier has a monthly quota; once it's used up (429), fall back to Adzuna alone
++        if e.response is None or e.response.status_code != 429:
++            raise
++        print("WARNING: JSearch quota or rate limit hit (HTTP 429); skipping JSearch and using Adzuna only",
++              file=sys.stderr)
++        jobs, jsearch_skipped = [], True
+     if len(jobs) < max_results:
+-        jobs.extend(search_adzuna(role, location, max_results - len(jobs)))
++        # Adzuna is optional: a bad key or outage shouldn't discard the JSearch results
++        try:
++            jobs.extend(search_adzuna(role, location, max_results - len(jobs)))
++        except requests.RequestException as e:
++            if jsearch_skipped:
++                sys.exit(f"ERROR: JSearch is out of quota and Adzuna failed too ({e})")
++            print(f"WARNING: Adzuna search failed, using JSearch results only ({e})", file=sys.stderr)
+ 
+-    print(json.dumps(jobs, indent=2, ensure_ascii=False))
++    print(json.dumps(apply_skip_list(jobs), indent=2, ensure_ascii=False))
+--- a/tools/review.py
++++ b/tools/review.py
+@@ -20,8 +20,8 @@
+ DB_PATH = Path(__file__).parent.parent / "my_job_data_center" / "tracker.db"
+ LEARN_PATH = Path(__file__).parent.parent / "my_job_data_center" / "learnings.jsonl"
+ 
+-SUBMITTED = {"applied", "responded", "interview", "offer", "rejected"}
+-RESPONDED = {"responded", "interview", "offer"}
++SUBMITTED = {"applied", "responded", "assessment", "interview", "offer", "rejected"}
++RESPONDED = {"responded", "assessment", "interview", "offer"}  # assessment = employer sent a test (e.g. HireVue)
+ INTERVIEWED = {"interview", "offer"}
+ 
+ 
+--- a/tools/dashboard.py
++++ b/tools/dashboard.py
+@@ -20,7 +20,7 @@
+ OUT_PATH = Path(__file__).parent.parent / "my_job_data_center" / "dashboard.html"
+ 
+ # Canonical pipeline order (funnel). Anything unrecognized falls to the end.
+-PIPELINE = ["drafted", "applied", "responded", "interview", "offer", "rejected"]
++PIPELINE = ["drafted", "applied", "responded", "assessment", "interview", "offer", "rejected"]
+ 
+ 
+ def load(db):
+@@ -49,7 +49,7 @@
+             pipeline[s] = c
+ 
+     # Response rate = anything past "applied" / total
+-    advanced = sum(status_counts.get(s, 0) for s in ["responded", "interview", "offer"])
++    advanced = sum(status_counts.get(s, 0) for s in ["responded", "assessment", "interview", "offer"])
+     resp_rate = round(100 * advanced / total) if total else 0
+ 
+     # Fit-score buckets
+@@ -123,7 +123,7 @@
+ <div class="card" style="margin-top:16px"><h2>All applications</h2><div id="table"></div></div>
+ <script>
+ const M=/*DATA*/;
+-const STATUS_COLORS={drafted:'#94a3b8',applied:'#3b82f6',responded:'#8b5cf6',interview:'#f59e0b',offer:'#18DD4C',rejected:'#ef4444'};
++const STATUS_COLORS={drafted:'#94a3b8',applied:'#3b82f6',responded:'#8b5cf6',assessment:'#ec4899',interview:'#f59e0b',offer:'#18DD4C',rejected:'#ef4444'};
+ const $=(id)=>document.getElementById(id);
+ $('sub').textContent=`Generated ${M.generated} · source: tracker.db`;
+ 

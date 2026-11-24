@@ -1,0 +1,40 @@
+# --- Secrets ---
+.env
+
+# --- Personal / private (never publish) ---
+bifei_resume.txt
+applications/
+
+# --- Presenter material (not part of the student agent) ---
+webinar/
+
+# --- Generated run data (created on first run) ---
+my_job_data_center/
+test_jobs/
+
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# --- Showcase repo: personal data that must never be committed ---
+*.env
+*resume*.pdf
+*resume*.txt
+*Resume*
+*Cover_Letter*
+job_hunt_*.md
+*_scored*.md
+job_hunt_state.json
+learnings.jsonl
+tracker.db
+skip_list.json
